@@ -1,5 +1,5 @@
 -module(apilib).
--export([call/2,eth_getBalance/1,eth_getCompilers/0,eth_compileSolidity/1,eth_sendTransaction/4,eth_getTransactionReceipt/1,web3_sha3/1,padleft/2,get_methodCallData/2,get_methodSignHash/1,eth_methodCall/3,get_methodSign/2,eth_propertyCall/2,eth_propertyMappingCall/3,string2hexstring/1,hexstring2string/1,hex2de/1,eth_blockNumber/0,get_tranBlockGap/1,hexstring2de/1]).
+-export([call/2,eth_getBalance/1,eth_getCompilers/0,eth_compileSolidity/1,eth_sendTransaction/4,eth_getTransactionReceipt/1,web3_sha3/1,padleft/2,get_methodCallData/2,get_methodSignHash/1,eth_methodCall/3,get_methodSign/2,eth_propertyCall/2,eth_propertyMappingCall/3,string2hexstring/1,hexstring2string/1,hex2de/1,eth_blockNumber/0,get_tranBlockGap/1,hexstring2de/1,de2hex/1]).
 -import(rfc4627,[encode/1,decode/1]).
 
 call(Method, Params) ->
@@ -102,13 +102,13 @@ get_ParamsValueString([P|PL]) ->
 		{Type, Value, Length, Offset} ->
 			if
 				Type =:= "uint256" ->
-					padleft(de2Hex(Value), Length) ++ get_ParamsValueString(PL);
+					padleft(de2hex(Value), Length) ++ get_ParamsValueString(PL);
 				Type =:= "uint" ->
-					padleft(de2Hex(Value), Length) ++ get_ParamsValueString(PL);
+					padleft(de2hex(Value), Length) ++ get_ParamsValueString(PL);
 				Type =:= "bytes32" ->
 					padright(Value, Length) ++ get_ParamsValueString(PL);
 				Type =:= "string" ->
-					padleft(de2Hex(Offset), 64) ++ padleft(de2Hex(length(Value)), 64) ++ padright(string2hexstring(Value), Length) ++ get_ParamsValueString(PL);
+					padleft(de2hex(Offset), 64) ++ padleft(de2hex(length(Value)), 64) ++ padright(string2hexstring(Value), Length) ++ get_ParamsValueString(PL);
 				true ->
 					padleft(Value, Length) ++ get_ParamsValueString(PL)
 			end;
@@ -156,7 +156,7 @@ tempData([Num]) ->
     end,  
     [Result | tempData([Num bsr 4])].  
  
-de2Hex(Num)->  
+de2hex(Num)->  
     lists:reverse(tempData([Num])).
 
 hex2de(Hex) ->

@@ -1,12 +1,10 @@
 contract BM_TBGameBackendV0
 {
-	struct TreaInfo
-	{
+	struct TreaInfo	{
 		uint type;
 		uint member;
 	}
-	struct MemState
-	{
+	struct MemState	{
 		uint chance;
 		uint[] tool;
 	}
