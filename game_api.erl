@@ -3,9 +3,10 @@
 -import(rfc4627,[encode/1,decode/1]).
 -import(apilib,[call/2,eth_getBalance/1,eth_getCompilers/0,eth_compileSolidity/1,eth_sendTransaction/4,eth_getTransactionReceipt/1,web3_sha3/1,padleft/2,get_methodCallData/2,get_methodSignHash/1,eth_methodCall/3,get_methodSign/2,eth_propertyCall/2,eth_propertyMappingCall/3,string2hexstring/1,hexstring2string/1,hex2de/1,hexstring2de/1,get_tranBlockGap/1]).
 -define(CA, "0x6B015e3c7D407977fa053e577F89A319667d3A21").
+-define(ACCOUNT, "0xda353ee3b7c142e4f5c99680d1371647d0672529").
 
 getBalance() ->
-	[_,_|L] = binary_to_list(eth_getBalance("0xda353ee3b7c142e4f5c99680d1371647d0672529")),
+	[_,_|L] = binary_to_list(eth_getBalance(?ACCOUNT)),
 	hex2de(L) / 1000000000000000000.
 
 getBalance(Addr) ->

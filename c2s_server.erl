@@ -12,5 +12,5 @@ start() ->
 			{server_root, "www"},
 			{erl_script_alias, {"/api", [c2s_controller]}}
 		]),
-	dets:open_file(memberMap,[{access,read_write}]),
-	dets:open_file(mapGrid,[{access,read_write},{type,bag}]).
+	dets:open_file(memberMap),
+	dets:open_file(mapGrid,[{type,bag}]).

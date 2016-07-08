@@ -58,8 +58,8 @@ do(SessionID, _Env, Input) ->
 		"getMemberMap" ->
 			[Mid|_] = Params,
 			dets:lookup(Mid);
-		_ ->
-			Content = "No such query."
+		Other ->
+			Content = {"No such query", Other}
 	end,
 	mod_esi:deliver(SessionID, [Header, unicode:characters_to_binary(Content), ""]).
 
