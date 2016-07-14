@@ -1,5 +1,5 @@
 -module(game_api).
--export([getBalance/0,getBalance/1,mapInit/1,setTreature/1,mapInitSetTreature/1,registerMember/1,resetChance/1,useChance/1,addChance/1,useTool/1,addTool/1,dig/1,digConfirm/1,xRay/1,getTreatureInfo/1,getTreatureInfoByGrid/1,getMemberInfo/1]).
+-export([getBalance/0,getBalance/1,mapInit/1,setTreature/1,mapInitSetTreature/1,registerMember/1,resetChance/1,useChance/1,addChance/1,useTool/1,addTool/1,dig/1,digConfirm/1,xRay/1,checkin/1,getTreatureInfo/1,getTreatureInfoByGrid/1,getMemberInfo/1]).
 -import(rfc4627,[encode/1,decode/1]).
 -import(apilib,[call/2,eth_getBalance/1,eth_getCompilers/0,eth_compileSolidity/1,eth_sendTransaction/4,eth_getTransactionReceipt/1,web3_sha3/1,padleft/2,get_methodCallData/2,get_methodSignHash/1,eth_methodCall/3,get_methodSign/2,eth_propertyCall/2,eth_propertyMappingCall/3,string2hexstring/1,hexstring2string/1,hex2de/1,hexstring2de/1,get_tranBlockGap/1]).
 -define(CA, "0x6B015e3c7D407977fa053e577F89A319667d3A21").
@@ -60,6 +60,10 @@ digConfirm(Param) ->
 xRay(Param) ->
 	[Gid|_] = Param,
 	eth_methodCall(?CA, "XRay", [{"bytes32", binary_to_list(Gid), 64, 0}]).
+
+checkin(Param) ->
+	[Mid,Timestamp|_] = Param,
+	eth_methodCall(?CA, "Checkin", [{"uint", binary_to_list(Mid), 64, 0}, {"uint", binary_to_list(Timestamp), 64, 0}]).
 
 getTreatureInfo(Param) ->
 	[Tid|_] = Param,

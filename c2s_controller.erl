@@ -1,5 +1,5 @@
 -module(c2s_controller).
--import(game_api,[getBalance/0,getBalance/1,mapInit/1,setTreature/1,mapInitSetTreature/1,registerMember/1,resetChance/1,useChance/1,addChance/1,useTool/1,addTool/1,dig/1,digConfirm/1,xRay/1,getTreatureInfo/1,getTreatureInfoByGid/1,getMemberInfo/1]).
+-import(game_api,[getBalance/0,getBalance/1,mapInit/1,setTreature/1,mapInitSetTreature/1,registerMember/1,resetChance/1,useChance/1,addChance/1,useTool/1,addTool/1,dig/1,digConfirm/1,xRay/1,checkin/1,getTreatureInfo/1,getTreatureInfoByGid/1,getMemberInfo/1]).
 -import(rfc4627,[encode/1,decode/1]).
 -export([do/3]).
 
@@ -27,7 +27,7 @@ do(SessionID, _Env, Input) ->
 		"registerMember" ->
 			[Mid|_] = Params,
 			MemMap = #{ },
-			dets:insert(memberMap,{Mid, getMapGrid(d, MemMap)}),
+			qiniulib:uploadObjZipped("MemberMap:"++Mid, getMapGrid(d, MemMap)),
 			Content = registerMember(Params);
 		"resetChance" ->
 			Content = resetChance(Params);
@@ -49,6 +49,8 @@ do(SessionID, _Env, Input) ->
 			dets:insert(memberMap,{Mid, MemMap});
 		"xRay" ->
 			Content = xRay(Params);
+		"checkin" ->
+			Content = checkin(Params);
 		"getTreatureInfo" ->
 			Content = getTreatureInfo(Params);
 		"getTreatureInfoByGid" ->
@@ -57,7 +59,8 @@ do(SessionID, _Env, Input) ->
 			Content = getMemberInfo(Params);
 		"getMemberMap" ->
 			[Mid|_] = Params,
-			dets:lookup(Mid);
+			Map = qiniulib:downloadObjZipped("MemberMap:"++Mid),
+			Content = encode(Map);
 		Other ->
 			Content = {"No such query", Other}
 	end,

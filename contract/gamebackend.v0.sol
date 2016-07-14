@@ -7,6 +7,7 @@ contract BM_TBGameBackendV0
 	struct MemState	{
 		uint chance;
 		uint[] tool;
+		uint lastlogin;
 	}
 	mapping(bytes32 => bytes32) public grid2treature;
 	mapping(bytes32 => TreaInfo) public treature2info;
@@ -81,12 +82,16 @@ contract BM_TBGameBackendV0
 			}
 		}
 	}
-	function DigConfirm(uint _id, bytes32 _grid) returns (bool result) {
+	function DigConfirm(uint _id, bytes32 _grid) returns (uint result) {
 		bytes32 treature = grid2treature[_grid];
 		if(treature2info[treature].member == _id) {
-			result = true;
+			result = 1;
 		} else {
-			result = false;
+			if(treature2info[treature].member == 0) {
+				result = 2;
+			} else {
+				result = 0;
+			}
 		}
 	}
 	function XRay(bytes32 _grid) returns (int result) {
@@ -100,5 +105,9 @@ contract BM_TBGameBackendV0
 				result = -treature2info[treature].type;
 			}
 		}
+	}
+	function Checkin(uint _id, uint timestamp) returns (uint result) {
+		result = member2state[_id].lastlogin;
+		member2state[_id].lastlogin = timestamp;
 	}
 }
